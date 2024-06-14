@@ -30,7 +30,7 @@ public class NoteController {
     ) {
 
         note.setPublicationDate(LocalDate.now());
-        noteService.addNote(note);
+        noteService.save(note);
 
         List<NoteEntity> notes = noteService.getAllNotes();
 
