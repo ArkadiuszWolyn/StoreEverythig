@@ -9,20 +9,15 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <style>
-		header {
+        header {
             background-color: #f0f0f0;
             padding: 20px;
             text-align: center;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center; /* Wyrównanie pionowe */
-            flex-direction: column;
         }
 
-        header p {
-            font-size: 16px;
-            line-height: 1.5;
-        }
 
         h1 {
             font-size: 24px;
@@ -33,14 +28,10 @@
             font-size: 16px;
             line-height: 1.5;
         }
-        body {
+        body container {
             font-family: Arial, sans-serif;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
 
         .add-note-button {
             background-color: #28a745;
@@ -63,6 +54,7 @@
             color: #007bff;
             cursor: pointer;
             margin-left: 10px;
+            margin-bottom: 15px;
         }
 
         .btn-link:hover {
@@ -72,14 +64,13 @@
         ul {
             list-style: none;
             padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
         }
 
         ul li {
-            margin-right: 10px;
+            display: inline;
+            margin-right: 15px;
         }
+
 
         .delete-button {
             background-color: #f00;
@@ -94,9 +85,6 @@
             background-color: #c00;
         }
 
-        .header-right {
-            margin-left: auto;
-        }
     </style>
     <script>
         $(document).ready(function () {
@@ -111,7 +99,7 @@
         <h1>Store Everything</h1>
         <p>Notuj wszystko, co ważne</p>
     </div>
-    <ul class="header-right">
+    <ul>
         <li>
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="btn btn-link">Wyloguj</button>
@@ -119,6 +107,9 @@
         </li>
         <li>
             <a th:href="@{/notes/new}" class="add-note-button">Dodaj Notatkę</a>
+        </li>
+        <li>
+            <a th:href="@{/users}" class="add-note-button">Użytkownicy</a>
         </li>
     </ul>
 </header>

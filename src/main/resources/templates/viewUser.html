@@ -4,27 +4,93 @@
     <meta charset="UTF-8">
     <title>View User</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+
+    <style>
+        header {
+            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Wyrównanie pionowe */
+        }
+
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        body container {
+            font-family: Arial, sans-serif;
+        }
+
+
+        .add-note-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .add-note-button:hover {
+            background-color: #218838;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            color: #007bff;
+            cursor: pointer;
+            margin-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            display: inline;
+            margin-right: 15px;
+        }
+
+
+    </style>
 </head>
 <body>
     <header>
-        <div class="title">
+        <div>
             <h1>Store Everything</h1>
-        </div>
-        <div class="description">
             <p>Notuj wszystko, co ważne</p>
         </div>
-        <div class="actions">
-            <ul>
-                <li>
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-link">Wyloguj</button>
-                    </form>
-                </li>
-                <li>
-                    <a th:href="@{/users}" class="btn btn-secondary">Lista użytkowników</a>
-                </li>
-            </ul>
-        </div>
+        <ul>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-link">Wyloguj</button>
+                </form>
+            </li>
+            <li>
+                <a th:href="@{/notes}" class="add-note-button">Lista notatek</a>
+            </li>
+            <li>
+                <a th:href="@{/users}" class="add-note-button">Użytkownicy</a>
+            </li>
+        </ul>
     </header>
     <div class="container">
         <h1>View User</h1>

@@ -8,6 +8,61 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <style>
+
+        header {
+            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Wyrównanie pionowe */
+        }
+
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            display: inline;
+            margin-right: 15px;
+        }
+
+        .add-note-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .add-note-button:hover {
+            background-color: #218838;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            color: #007bff;
+            cursor: pointer;
+            margin-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
         .delete-button {
             background-color: #f00;
             color: #fff;
@@ -29,24 +84,26 @@
 </head>
 <body>
     <header>
-        <div class="title">
+        <div>
             <h1>Store Everything</h1>
-        </div>
-        <div class="description">
+
             <p>Notuj wszystko, co ważne</p>
         </div>
-        <div class="actions">
-            <ul>
-                <li>
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-link">Wyloguj</button>
-                    </form>
-                </li>
-                <li>
-                    <a th:href="@{/notes}" class="btn btn-secondary">Lista notatek</a>
-                </li>
-            </ul>
-        </div>
+
+        <ul>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-link">Wyloguj</button>
+                </form>
+            </li>
+            <li>
+                <a th:href="@{/notes}" class="add-note-button">Lista notatek</a>
+            </li>
+            <li>
+                <a th:href="@{/users}" class="add-note-button">Użytkownicy</a>
+            </li>
+        </ul>
+
     </header>
     <div class="container">
         <h1>Users List</h1>

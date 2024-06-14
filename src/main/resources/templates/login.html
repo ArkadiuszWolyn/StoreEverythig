@@ -31,11 +31,6 @@
             line-height: 1.5;
         }
 
-        /* Styl sekcji wprowadzającej */
-        .intro {
-            padding: 40px;
-            text-align: center;
-        }
 
         .intro img {
             width: 50%;
@@ -43,10 +38,6 @@
             margin: 20px auto;
         }
 
-        /* Styl sekcji funkcji */
-        .features {
-            padding: 40px;
-        }
 
         .features h2 {
             text-align: center;
@@ -66,13 +57,6 @@
             margin-right: 10px;
         }
 
-        /* Styl przycisku CTA */
-        .cta {
-            background-color: #007bff;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
 
         .cta a {
             display: inline-block;
@@ -87,8 +71,11 @@
 </head>
 <body>
 <header>
-    <h1>Store Everything</h1>
-    <p>Notuj wszystko, co ważne</p>
+    <div>
+        <h1>Store Everything</h1>
+        <p>Notuj wszystko, co ważne</p>
+
+    </div>
     <ul>
         <li><a th:href="@{/}">Strona główna</a></li>
     </ul>

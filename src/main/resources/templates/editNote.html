@@ -6,27 +6,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             background-color: #f0f0f0;
             padding: 20px;
-        }
-
-        header .title {
-            flex: 1;
-            text-align: left;
-        }
-
-        header .description {
-            flex: 1;
             text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Wyrównanie pionowe */
         }
 
-        header .actions {
-            flex: 1;
-            text-align: right;
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
         }
+
 
         ul {
             list-style: none;
@@ -34,7 +27,8 @@
         }
 
         ul li {
-             margin-bottom: 15px;
+            display: inline;
+            margin-right: 15px;
         }
 
         .add-note-button {
@@ -58,6 +52,7 @@
             color: #007bff;
             cursor: pointer;
             margin-left: 10px;
+            margin-bottom: 15px;
         }
 
         .btn-link:hover {
@@ -67,24 +62,25 @@
 </head>
 <body>
     <header>
-        <div class="title">
+        <div>
             <h1>Store Everything</h1>
-        </div>
-        <div class="description">
             <p>Notuj wszystko, co ważne</p>
         </div>
-        <div class="actions">
-            <ul>
-                <li>
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-link">Wyloguj</button>
-                    </form>
-                </li>
-                <li>
-                    <a th:href="@{/notes}" class="add-note-button">Lista notatek</a>
-                </li>
-            </ul>
-        </div>
+
+        <ul>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-link">Wyloguj</button>
+                </form>
+            </li>
+            <li>
+                <a th:href="@{/notes}" class="add-note-button">Lista notatek</a>
+            </li>
+            <li>
+                <a th:href="@{/users}" class="add-note-button">Użytkownicy</a>
+            </li>
+        </ul>
+
     </header>
     <div class="container">
         <h1>Edit Note</h1>

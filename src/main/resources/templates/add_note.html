@@ -24,50 +24,53 @@
             font-weight: bold;
         }
 
-        p {
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        
-        /* Styl przycisku CTA */
-        .cta {
-            background-color: #007bff;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
+        ul {
+            list-style: none;
+            padding: 0;
         }
 
-        .cta a {
-            display: inline-block;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #fff;
-            background-color: #0056b3;
-            border-radius: 5px;
+        ul li {
+            display: inline;
+            margin-right: 15px;
+
         }
 
         .add-note-button {
             background-color: #28a745;
-            color: #fff;
+            color: #000000;
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
+            margin-left: 10px;
         }
 
         .add-note-button:hover {
             background-color: #218838;
         }
 
-        ul {
-            list-style: none;
+        .btn-link {
+            background: none;
+            border: none;
             padding: 0;
-            margin: 0;
+            font: inherit;
+            color: #007bff;
+            cursor: pointer;
+            margin-left: 10px;
+            margin-bottom: 15px;
         }
 
-        ul li {
-            display: inline;
-            margin-right: 10px;
+        .btn-link:hover {
+            text-decoration: underline;
         }
+
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+
+
 </style>
 
 
@@ -79,8 +82,17 @@
         <p>Notuj wszystko, co ważne</p>
     </div>
     <ul>
-        <li><a th:action="@{/logout}" method="post">Wyloguj</a></li>
-        <li><a th:href="@{/notes}">Lista notatke</a></li>
+        <li>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-link">Wyloguj</button>
+            </form>
+        </li>
+        <li>
+            <a th:href="@{/notes}" class="add-note-button">Lista notatek</a>
+        </li>
+        <li>
+            <a th:href="@{/users}" class="add-note-button">Użytkownicy</a>
+        </li>
     </ul>
 </header>
 	
