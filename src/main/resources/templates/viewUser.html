@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <div class="title">
+            <h1>Store Everything</h1>
+        </div>
+        <div class="description">
+            <p>Notuj wszystko, co ważne</p>
+        </div>
+        <div class="actions">
+            <ul>
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-link">Wyloguj</button>
+                    </form>
+                </li>
+                <li>
+                    <a th:href="@{/users}" class="btn btn-secondary">Lista użytkowników</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="container">
+        <h1>View User</h1>
+        <div>
+            <h2 th:text="${user.username}">Username</h2>
+            <p><strong>First Name:</strong> <span th:text="${user.firstName}">First Name</span></p>
+            <p><strong>Last Name:</strong> <span th:text="${user.lastName}">Last Name</span></p>
+            <p><strong>Age:</strong> <span th:text="${user.age}">Age</span></p>
+            <p><strong>Roles:</strong> <span th:text="${user.roles}">Roles</span></p>
+        </div>
+        <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-warning">Edit</a>
+        <a th:href="@{/users}" class="btn btn-secondary">Back to List</a>
+    </div>
+</body>
+</html>
