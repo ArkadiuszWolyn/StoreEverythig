@@ -35,11 +35,12 @@ public class RegistrationController {
         }
 
         String result = registrationService.register(request);
+        System.out.print(result);
         if (!result.startsWith("Registration successful")) {
             model.addAttribute("errorMessage", result);
             return "registrationForm";
         }
-
-        return "redirect:/dashboard";
+        
+        return "redirect:/login";
     }
 }

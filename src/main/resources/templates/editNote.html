@@ -84,25 +84,31 @@
     </header>
     <div class="container">
         <h1>Edit Note</h1>
-        <form th:action="@{/notes/edit/{id}(id=${note.id})}" th:object="${note}" method="post">
+        <form th:action="@{/notes/edit/{id}(id=${noteForm.id})}" th:object="${noteForm}" method="post">
             <div class="form-group">
                 <label for="title">Title:</label>
                 <input type="text" id="title" class="form-control" th:field="*{title}" required />
+                <div th:if="${#fields.hasErrors('title')}" class="text-danger">
+                    <p th:errors="*{title}">Title Error</p>
+                </div>
             </div>
             <div class="form-group">
                 <label for="content">Content:</label>
                 <textarea id="content" class="form-control" th:field="*{content}" required></textarea>
+                <div th:if="${#fields.hasErrors('content')}" class="text-danger">
+                    <p th:errors="*{content}">Content Error</p>
+                </div>
             </div>
             <div class="form-group">
                 <label for="link">Link:</label>
                 <input type="text" id="link" class="form-control" th:field="*{link}" />
             </div>
             <div class="form-group">
-                <input type="hidden" th:field="*{publicationDate}" />
-            </div>
-            <div class="form-group">
                 <label for="category">Category:</label>
                 <input type="text" id="category" class="form-control" th:field="*{category}" required />
+                <div th:if="${#fields.hasErrors('category')}" class="text-danger">
+                    <p th:errors="*{category}">Category Error</p>
+                </div>
             </div>
             <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="publicNote" th:field="*{publicNote}">

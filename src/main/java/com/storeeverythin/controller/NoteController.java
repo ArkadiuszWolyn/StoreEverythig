@@ -37,6 +37,28 @@ public class NoteController {
         model.addAttribute("notes", notes);
         return "redirect:/notes";
     }
+    
+    @GetMapping("/edit/{id}")
+    public String showEditNoteForm(@PathVariable Long id, Model model) {
+        NoteEntity note = noteService.findById(id);
+        if (note != null) {
+            model.addAttribute("noteForm", note);
+        }
+        return "editNote.html";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editNote(@PathVariable Long id, @Valid @ModelAttribute("noteForm") NoteEntity note, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "editNote.html";
+        }
+        
+        NoteEntity existingNote = noteService.findById(id);
+        note.setId(id);
+        note.setPublicationDate(existingNote.getPublicationDate()); // Keep the original publication date
+        noteService.save(note);
+        return "redirect:/notes";
+    }
 
     @GetMapping("{id}")
     public String viewNote(@PathVariable Long id, Model model) {

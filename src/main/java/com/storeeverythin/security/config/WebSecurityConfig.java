@@ -18,7 +18,7 @@ public class WebSecurityConfig {
         http
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/", "/home", "/registration/**", "/register", "/login", "/resources/**").permitAll()
+                    .requestMatchers("/", "/register", "/login").permitAll()
                     .requestMatchers("/users/**").hasRole("ADMIN") // Ograniczenie dostępu do widoku użytkowników tylko dla administratorów
                     .anyRequest().authenticated()
             )

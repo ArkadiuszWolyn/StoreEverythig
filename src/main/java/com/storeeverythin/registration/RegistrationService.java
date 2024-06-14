@@ -1,23 +1,24 @@
 package com.storeeverythin.registration;
 
+import com.storeeverythin.model.UserEntity;
+import com.storeeverythin.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.storeeverythin.model.UserEntity;
-import com.storeeverythin.repository.UserRepository;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
 public class RegistrationService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public RegistrationService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public RegistrationService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public String register(RegistrationRequest request) {
@@ -30,9 +31,9 @@ public class RegistrationService {
         newUser.setFirstName(request.getFirstName());
         newUser.setLastName(request.getLastName());
         newUser.setUsername(request.getUsername());
-        newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         newUser.setAge(request.getAge());
-        newUser.setRoles(request.getRoles());
+        newUser.setRoles(Collections.singletonList("LIMITED_USER"));
 
         userRepository.save(newUser);
 

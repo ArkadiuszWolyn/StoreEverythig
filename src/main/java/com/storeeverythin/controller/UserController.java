@@ -43,10 +43,21 @@ public class UserController {
 
     @PostMapping("/edit/{id}")
     public String updateUser(@PathVariable Long id, @ModelAttribute UserEntity user) {
+        UserEntity existingUser = userService.getUserById(id);
+
+        // Zachowaj istniejące hasło, jeśli hasło nie zostało podane
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            user.setPassword(existingUser.getPassword());
+        } else {
+            // Jeśli hasło zostało zmienione, zakoduj je ponownie
+            user.setPassword(userService.encodePassword(user.getPassword()));
+        }
+
         user.setId(id);
         userService.saveUser(user);
         return "redirect:/users";
     }
+
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
