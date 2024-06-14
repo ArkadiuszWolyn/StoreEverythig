@@ -4,8 +4,95 @@
     <title>Login</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Styl nagłówka */
+        header {
+            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Wyrównanie pionowe */
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* Styl sekcji wprowadzającej */
+        .intro {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .intro img {
+            width: 50%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        /* Styl sekcji funkcji */
+        .features {
+            padding: 40px;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            margin-bottom: 15px;
+        }
+
+        .features i {
+            margin-right: 10px;
+        }
+
+        /* Styl przycisku CTA */
+        .cta {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .cta a {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+
+    </style>
 </head>
 <body>
+<header>
+    <h1>Store Everything</h1>
+    <p>Notuj wszystko, co ważne</p>
+    <ul>
+        <li><a th:href="@{/}">Strona główna</a></li>
+    </ul>
+</header>
     <div class="container">
         <h1>Login</h1>
         <form th:action="@{/login}" method="post">
@@ -17,7 +104,10 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" class="form-control" required />
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a href="/register" class="btn btn-secondary">Zarejestruj</a>
+            </div>
             <div th:if="${param.error}">
                 <p class="alert alert-danger">Invalid username or password.</p>
             </div>

@@ -26,6 +26,11 @@ public class NoteService {
     public List<NoteEntity> findByUserId(long userId) {
         return noteRepository.findByUserId(userId);
     }
+    
+    public void deleteNoteById(long id) {
+        noteRepository.deleteById(id);
+    }
+
 
     public List<NoteEntity> findByTitle(String title) {
         return noteRepository.findByTitle(title);

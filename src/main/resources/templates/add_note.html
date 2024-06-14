@@ -7,8 +7,83 @@
     <meta charset="UTF-8">
     <title>Add New Note</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  </head>
+<style>
+        
+        /* Styl nagłówka */
+        header {
+            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Wyrównanie pionowe */
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        /* Styl przycisku CTA */
+        .cta {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .cta a {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+
+        .add-note-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .add-note-button:hover {
+            background-color: #218838;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+</style>
+
+
 </head>
 <body>
+<header>
+    <div>
+        <h1>Store Everything</h1>
+        <p>Notuj wszystko, co ważne</p>
+    </div>
+    <ul>
+        <li><a th:action="@{/logout}" method="post">Wyloguj</a></li>
+        <li><a th:href="@{/notes}">Lista notatke</a></li>
+    </ul>
+</header>
+	
 
 <h1>Create New Post</h1>
 

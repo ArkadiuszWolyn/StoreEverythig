@@ -4,42 +4,190 @@
 <head>
     <meta charset="UTF-8">
     <title>Notatki</title>
+    <style>
+
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .notes-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .note {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .note-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .note-date,
+        .note-content {
+            margin-bottom: 10px;
+        }
+
+        .note-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .details-link,
+        .delete-button {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .details-link {
+            background-color: #eee;
+            color: #000;
+        }
+
+        .delete-button {
+            background-color: #f00;
+            color: #fff;
+        }
+
+        .delete-button:hover {
+            background-color: #c00;
+        }
+        
+        /* Styl stopki */
+        footer {
+            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        /* Styl nagłówka */
+        header {
+            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Wyrównanie pionowe */
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        /* Styl przycisku CTA */
+        .cta {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .cta a {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+
+        .add-note-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: 10px; /* Dodanie odstępu między przyciskami */
+        }
+
+        .add-note-button:hover {
+            background-color: #218838;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center; /* Wyrównanie pionowe */
+        }
+
+        ul li {
+            margin-right: 10px;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            color: #007bff;
+            cursor: pointer;
+            margin-left: 10px; /* Dodanie odstępu między przyciskami */
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
+<header>
+    <div>
+        <h1>Store Everything</h1>
+        <p>Notuj wszystko, co ważne</p>
+    </div>
+    <ul>
+        <li>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-link">Wyloguj</button>
+            </form>
+        </li>
+        <li>
+            <a th:href="@{/notes/new}" class="add-note-button">Dodaj Notatkę</a>
+        </li>
+    </ul>
+</header>
 
 <h1>All Notes</h1>
 
-<ul>
+<ul class="notes-list">
     <li th:each="note : ${notes}">
-        <span th:text="${note.title}">Title</span> - <span th:text="${note.publicationDate}">Date</span>
-        <br/>
-        <span th:text="${note.content}">...</span>  <a th:href="@{/notes/{id}(id=${note.id})}">Details</a>
-        <form th:action="@{/notes/{id}(id=${note.id})}" th:method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            <button type="submit">Delete</button>
-        </form>
-        <!--<button type="button" onclick="deleteNote(${note.id})">Delete</button>-->
-
+        <div class="note">
+            <h3 class="note-title" th:text="${note.title}">Title</h3>
+            <p class="note-date" th:text="${note.publicationDate}">Date</p>
+            <p class="note-content" th:text="${note.content}">...</p>
+            <p th:if="${note.link != null}">
+                <a class="external-link" th:href="${note.link}" target="_blank">External Link</a>
+            </p>
+            <p class="note-category" th:text="${note.category}">Category</p>
+            <form th:action="@{/notes/delete/{id}(id=${note.id})}" th:method="post">
+                <input type="hidden" name="_method" value="DELETE" />
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+        </div>
     </li>
 </ul>
-
-<script>
-    function deleteNote(id) {
-        if (confirm("Are you sure you want to delete this note?")) {
-            var noteId = id/* tutaj pobierz identyfikator notatki */;
-            fetch('/notes/' + noteId, {
-                method: 'DELETE',
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                location.reload(); // Odświeżenie strony po usunięciu notatki
-            }).catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-            });
-        }
-    }
-</script>
 
 </body>
 </html>

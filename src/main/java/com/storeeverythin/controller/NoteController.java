@@ -44,19 +44,14 @@ public class NoteController {
         noteService.editNote(note);
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteNote(
-            @PathVariable long id,
+    		@PathVariable long id,
             Model model
     ) {
         System.out.println("delete");
         try {
-            noteService.deleteNote(id);
-
-            List<NoteEntity> notes = noteService.getAllNotes();
-
-            model.addAttribute("notes", notes);
-            model.addAttribute("noteToDelete", new NoteEntity());
+            noteService.deleteNoteById(id);
         } catch (Exception e) {
             e.printStackTrace();
         }

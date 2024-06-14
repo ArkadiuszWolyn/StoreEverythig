@@ -5,7 +5,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-
 @Entity
 public class NoteEntity {
 
@@ -26,20 +25,23 @@ public class NoteEntity {
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate publicationDate;
 
-
     @Column(length = 20, nullable = false)
     private String category;
+
+    @Column(nullable = false)
+    private boolean publicNote;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    // Gettery i settery
 
     public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -81,6 +83,14 @@ public class NoteEntity {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean isPublicNote() {
+        return publicNote;
+    }
+
+    public void setPublicNote(boolean publicNote) {
+        this.publicNote = publicNote;
     }
 
     public UserEntity getUser() {

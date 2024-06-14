@@ -16,20 +16,20 @@ public class WebSecurityConfig {
         http
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/", "/home", "/registration/**", "/register", "/login", "/resources/**").permitAll()
+                    .requestMatchers("/", "/register", "/login").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin(formLogin ->
                 formLogin
                     .loginPage("/login")
-                    .defaultSuccessUrl("/dashboard", true)
+                    .defaultSuccessUrl("/notes", true)
                     .failureUrl("/login?error=true")
                     .permitAll()
             )
             .logout(logout ->
                 logout
                     .logoutUrl("/logout")
-                    .logoutSuccessUrl("/") // Przekierowanie po wylogowaniu
+                    .logoutSuccessUrl("/")
                     .permitAll()
             )
             .headers(headers -> headers.frameOptions().sameOrigin());
