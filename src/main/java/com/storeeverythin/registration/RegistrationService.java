@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.storeeverythin.model.UserEntity;
 import com.storeeverythin.repository.UserRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,15 +32,10 @@ public class RegistrationService {
         newUser.setUsername(request.getUsername());
         newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         newUser.setAge(request.getAge());
-        newUser.setRoles(List.of("admin"));
+        newUser.setRoles(request.getRoles());
 
         userRepository.save(newUser);
 
         return "Registration successful for user: " + request.getUsername();
-    }
-
-    public String confirmToken(String token) {
-        // Logika potwierdzenia tokenu
-        return "Token confirmed successfully!";
     }
 }

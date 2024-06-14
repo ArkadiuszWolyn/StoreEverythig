@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Notatki</title>
+</head>
+<body>
+
+<h1>All Notes</h1>
+
+<ul>
+    <li th:each="note : ${notes}">
+        <span th:text="${note.title}">Title</span> - <span th:text="${note.publicationDate}">Date</span>
+        <br/>
+        <span th:text="${note.content}">...</span>  <a th:href="@{/notes/{id}(id=${note.id})}">Details</a>
+        <form th:action="@{/notes/{id}(id=${note.id})}" th:method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            <button type="submit">Delete</button>
+        </form>
+        <!--<button type="button" onclick="deleteNote(${note.id})">Delete</button>-->
+
+    </li>
+</ul>
+
+<script>
+    function deleteNote(id) {
+        if (confirm("Are you sure you want to delete this note?")) {
+            var noteId = id/* tutaj pobierz identyfikator notatki */;
+            fetch('/notes/' + noteId, {
+                method: 'DELETE',
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                location.reload(); // Odświeżenie strony po usunięciu notatki
+            }).catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

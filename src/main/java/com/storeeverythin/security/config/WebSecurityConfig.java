@@ -22,17 +22,17 @@ public class WebSecurityConfig {
             .formLogin(formLogin ->
                 formLogin
                     .loginPage("/login")
-                    .defaultSuccessUrl("/dashboard", true) // Ustawienie domyślnego URL po zalogowaniu
+                    .defaultSuccessUrl("/dashboard", true)
                     .failureUrl("/login?error=true")
                     .permitAll()
             )
             .logout(logout ->
                 logout
                     .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login?logout=true")
+                    .logoutSuccessUrl("/") // Przekierowanie po wylogowaniu
                     .permitAll()
             )
-            .headers(headers -> headers.frameOptions().sameOrigin()); // Allow H2 console to be embedded in a frame
+            .headers(headers -> headers.frameOptions().sameOrigin());
         return http.build();
     }
 
