@@ -40,4 +40,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
+    
+    public UserEntity getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+    }
 }
