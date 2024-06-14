@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -16,7 +18,8 @@ public class WebSecurityConfig {
         http
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/", "/register", "/login").permitAll()
+                    .requestMatchers("/", "/home", "/registration/**", "/register", "/login", "/resources/**").permitAll()
+                    .requestMatchers("/users/**").hasRole("ADMIN") // Ograniczenie dostępu do widoku użytkowników tylko dla administratorów
                     .anyRequest().authenticated()
             )
             .formLogin(formLogin ->
@@ -32,8 +35,19 @@ public class WebSecurityConfig {
                     .logoutSuccessUrl("/")
                     .permitAll()
             )
+            .exceptionHandling(exceptionHandling ->
+                exceptionHandling
+                    .accessDeniedHandler(accessDeniedHandler())
+            )
             .headers(headers -> headers.frameOptions().sameOrigin());
         return http.build();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        AccessDeniedHandlerImpl accessDeniedHandler = new AccessDeniedHandlerImpl();
+        accessDeniedHandler.setErrorPage("/403");
+        return accessDeniedHandler;
     }
 
     @Bean
