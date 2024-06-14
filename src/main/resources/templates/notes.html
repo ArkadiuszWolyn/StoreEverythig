@@ -4,83 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Notatki</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <style>
-
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .notes-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .note {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
-
-        .note-title {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .note-date,
-        .note-content {
-            margin-bottom: 10px;
-        }
-
-        .note-actions {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .details-link,
-        .delete-button {
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .details-link {
-            background-color: #eee;
-            color: #000;
-        }
-
-        .delete-button {
-            background-color: #f00;
-            color: #fff;
-        }
-
-        .delete-button:hover {
-            background-color: #c00;
-        }
-        
-        /* Styl stopki */
-        footer {
-            background-color: #f0f0f0;
-            padding: 20px;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-        
-        /* Styl nagłówka */
-        header {
+		header {
             background-color: #f0f0f0;
             padding: 20px;
             text-align: center;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center; /* Wyrównanie pionowe */
+            flex-direction: column;
+        }
+
+        header p {
+            font-size: 16px;
+            line-height: 1.5;
         }
 
         h1 {
@@ -92,22 +33,13 @@
             font-size: 16px;
             line-height: 1.5;
         }
-        
-        /* Styl przycisku CTA */
-        .cta {
-            background-color: #007bff;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
+        body {
+            font-family: Arial, sans-serif;
         }
 
-        .cta a {
-            display: inline-block;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #fff;
-            background-color: #0056b3;
-            border-radius: 5px;
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .add-note-button {
@@ -116,23 +48,11 @@
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
-            margin-left: 10px; /* Dodanie odstępu między przyciskami */
+            margin-left: 10px;
         }
 
         .add-note-button:hover {
             background-color: #218838;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center; /* Wyrównanie pionowe */
-        }
-
-        ul li {
-            margin-right: 10px;
         }
 
         .btn-link {
@@ -142,13 +62,47 @@
             font: inherit;
             color: #007bff;
             cursor: pointer;
-            margin-left: 10px; /* Dodanie odstępu między przyciskami */
+            margin-left: 10px;
         }
 
         .btn-link:hover {
             text-decoration: underline;
         }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        ul li {
+            margin-right: 10px;
+        }
+
+        .delete-button {
+            background-color: #f00;
+            color: #fff;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #c00;
+        }
+
+        .header-right {
+            margin-left: auto;
+        }
     </style>
+    <script>
+        $(document).ready(function () {
+            $('#notesTable').DataTable();
+        });
+    </script>
 </head>
 
 <body>
@@ -157,7 +111,7 @@
         <h1>Store Everything</h1>
         <p>Notuj wszystko, co ważne</p>
     </div>
-    <ul>
+    <ul class="header-right">
         <li>
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="btn btn-link">Wyloguj</button>
@@ -171,23 +125,35 @@
 
 <h1>All Notes</h1>
 
-<ul class="notes-list">
-    <li th:each="note : ${notes}">
-        <div class="note">
-            <h3 class="note-title" th:text="${note.title}">Title</h3>
-            <p class="note-date" th:text="${note.publicationDate}">Date</p>
-            <p class="note-content" th:text="${note.content}">...</p>
-            <p th:if="${note.link != null}">
-                <a class="external-link" th:href="${note.link}" target="_blank">External Link</a>
-            </p>
-            <p class="note-category" th:text="${note.category}">Category</p>
-            <form th:action="@{/notes/delete/{id}(id=${note.id})}" th:method="post">
-                <input type="hidden" name="_method" value="DELETE" />
-                <button type="submit" class="delete-button">Delete</button>
-            </form>
-        </div>
-    </li>
-</ul>
+<div class="container">
+    <table id="notesTable" class="display">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Content</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="note : ${notes}">
+                <td th:text="${note.title}">Title</td>
+                <td th:text="${note.publicationDate}">Date</td>
+                <td th:text="${note.content}">Content</td>
+                <td th:text="${note.category}">Category</td>
+                <td>
+                    <a th:href="@{/notes/{id}(id=${note.id})}" class="btn btn-info btn-sm">View</a>
+                    <a th:href="@{/notes/edit/{id}(id=${note.id})}" class="btn btn-warning btn-sm">Edit</a>
+                    <form th:action="@{/notes/delete/{id}(id=${note.id})}" th:method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE"/>
+                        <button type="submit" class="delete-button btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

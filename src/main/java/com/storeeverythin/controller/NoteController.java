@@ -38,10 +38,11 @@ public class NoteController {
         return "redirect:/notes";
     }
 
-    @PutMapping("/{id}")
-    public void editNote(@PathVariable long id, @RequestBody NoteEntity note) {
-        note.setId(id);
-        noteService.editNote(note);
+    @GetMapping("{id}")
+    public String viewNote(@PathVariable Long id, Model model) {
+        NoteEntity note = noteService.findById(id);
+        model.addAttribute("note", note);
+        return "viewNote";
     }
 
     @PostMapping("/delete/{id}")
@@ -49,7 +50,6 @@ public class NoteController {
     		@PathVariable long id,
             Model model
     ) {
-        System.out.println("delete");
         try {
             noteService.deleteNoteById(id);
         } catch (Exception e) {
