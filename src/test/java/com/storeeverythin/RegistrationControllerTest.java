@@ -8,17 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
 public class RegistrationControllerTest {
 
     @InjectMocks
@@ -33,47 +29,52 @@ public class RegistrationControllerTest {
     @Mock
     private BindingResult bindingResult;
 
-    private MockMvc mockMvc;
-
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testShowRegistrationForm() throws Exception {
-        mockMvc.perform(get("/register"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("registrationForm"))
-                .andExpect(model().attributeExists("registrationRequest"));
+    public void testShowRegistrationForm() {
+        String result = registrationController.showRegistrationForm(model);
+
+        verify(model, times(1)).addAttribute(eq("registrationRequest"), any(RegistrationRequest.class));
+        assertEquals("registrationForm", result);
     }
 
-
     @Test
-    public void testRegisterSuccess() throws Exception {
+    public void testRegister_Success() {
+        RegistrationRequest request = new RegistrationRequest();
         when(bindingResult.hasErrors()).thenReturn(false);
         when(registrationService.register(any(RegistrationRequest.class))).thenReturn("Registration successful");
 
-        mockMvc.perform(post("/register")
-                        .flashAttr("registrationRequest", new RegistrationRequest()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dashboard"));
+        String result = registrationController.register(request, bindingResult, model);
 
+        assertEquals("redirect:/login", result);
         verify(registrationService, times(1)).register(any(RegistrationRequest.class));
     }
 
     @Test
-    public void testRegisterFailure() throws Exception {
+    public void testRegister_BindingErrors() {
+        RegistrationRequest request = new RegistrationRequest();
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        String result = registrationController.register(request, bindingResult, model);
+
+        assertEquals("registrationForm", result);
+        verify(registrationService, times(0)).register(any(RegistrationRequest.class));
+    }
+
+    @Test
+    public void testRegister_Failure() {
+        RegistrationRequest request = new RegistrationRequest();
         when(bindingResult.hasErrors()).thenReturn(false);
-        when(registrationService.register(any(RegistrationRequest.class))).thenReturn("Registration failed: User already exists");
+        when(registrationService.register(any(RegistrationRequest.class))).thenReturn("Registration failed: Email already in use");
 
-        mockMvc.perform(post("/register")
-                        .flashAttr("registrationRequest", new RegistrationRequest()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("registrationForm"))
-                .andExpect(model().attributeExists("errorMessage"));
+        String result = registrationController.register(request, bindingResult, model);
 
+        assertEquals("registrationForm", result);
+        verify(model, times(1)).addAttribute(eq("errorMessage"), eq("Registration failed: Email already in use"));
         verify(registrationService, times(1)).register(any(RegistrationRequest.class));
     }
 }

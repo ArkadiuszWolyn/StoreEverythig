@@ -1,5 +1,4 @@
 package com.storeeverythin;
-
 import com.storeeverythin.controller.NoteController;
 import com.storeeverythin.model.NoteEntity;
 import com.storeeverythin.service.NoteService;
@@ -8,15 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.validation.BindingResult;
 
-@SpringBootTest
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
+
 public class NoteControllerTest {
 
     @InjectMocks
@@ -28,44 +30,89 @@ public class NoteControllerTest {
     @Mock
     private Model model;
 
-    private MockMvc mockMvc;
+    @Mock
+    private BindingResult bindingResult;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(noteController).build();
+        MockitoAnnotations.openMocks(this);
     }
 
-
     @Test
-    public void testEditNote() throws Exception {
+    public void testAddNote() {
         NoteEntity note = new NoteEntity();
-        note.setTitle("Updated Note");
-        note.setContent("Updated Content");
+        List<NoteEntity> notes = new ArrayList<>();
+        when(noteService.getAllNotes()).thenReturn(notes);
 
-        mockMvc.perform(put("/notes/{id}", 1L)
-                        .contentType("application/json")
-                        .content("{\"title\":\"Updated Note\",\"content\":\"Updated Content\"}"))
-                .andExpect(status().isOk());
+        String result = noteController.addNote(note, bindingResult, model);
 
-        verify(noteService, times(1)).editNote(any(NoteEntity.class));
+        verify(noteService, times(1)).save(any(NoteEntity.class));
+        verify(model, times(1)).addAttribute(eq("notes"), eq(notes));
+        assertEquals("redirect:/notes", result);
     }
 
     @Test
-    public void testDeleteNote() throws Exception {
-        mockMvc.perform(post("/notes/delete/{id}", 1L))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/notes"));
+    public void testShowEditNoteForm() {
+        NoteEntity note = new NoteEntity();
+        when(noteService.findById(anyLong())).thenReturn(note);
 
-        verify(noteService, times(1)).deleteNoteById(1L);
+        String result = noteController.showEditNoteForm(1L, model);
+
+        verify(model, times(1)).addAttribute(eq("noteForm"), eq(note));
+        assertEquals("editNote.html", result);
     }
 
+    @Test
+    public void testEditNote() {
+        NoteEntity note = new NoteEntity();
+        NoteEntity existingNote = new NoteEntity();
+        existingNote.setPublicationDate(LocalDate.now());
+        when(noteService.findById(anyLong())).thenReturn(existingNote);
+        when(bindingResult.hasErrors()).thenReturn(false);
+
+        String result = noteController.editNote(1L, note, bindingResult, model);
+
+        verify(noteService, times(1)).save(any(NoteEntity.class));
+        assertEquals("redirect:/notes", result);
+    }
 
     @Test
-    public void testAddNewNote() throws Exception {
-        mockMvc.perform(get("/notes/new"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("add_note.html"))
-                .andExpect(model().attributeExists("noteForm"));
+    public void testViewNote() {
+        NoteEntity note = new NoteEntity();
+        when(noteService.findById(anyLong())).thenReturn(note);
+
+        String result = noteController.viewNote(1L, model);
+
+        verify(model, times(1)).addAttribute(eq("note"), eq(note));
+        assertEquals("viewNote", result);
+    }
+
+    @Test
+    public void testDeleteNote() {
+        doNothing().when(noteService).deleteNoteById(anyLong());
+
+        String result = noteController.deleteNote(1L, model);
+
+        verify(noteService, times(1)).deleteNoteById(anyLong());
+        assertEquals("redirect:/notes", result);
+    }
+
+    @Test
+    public void testGetAllNotes() {
+        List<NoteEntity> notes = new ArrayList<>();
+        when(noteService.getAllNotes()).thenReturn(notes);
+
+        String result = noteController.getAllNotes(model);
+
+        verify(model, times(1)).addAttribute(eq("notes"), eq(notes));
+        assertEquals("notes", result);
+    }
+
+    @Test
+    public void testAddNewNote() {
+        String result = noteController.addNewNote(model);
+
+        verify(model, times(1)).addAttribute(eq("noteForm"), any(NoteEntity.class));
+        assertEquals("add_note.html", result);
     }
 }

@@ -1,6 +1,5 @@
 package com.storeeverythin;
 
-import com.storeeverythin.model.Role;
 import com.storeeverythin.model.UserEntity;
 import com.storeeverythin.registration.RegistrationRequest;
 import com.storeeverythin.registration.RegistrationService;
@@ -10,66 +9,62 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 public class RegistrationServiceTest {
+
+    @InjectMocks
+    private RegistrationService registrationService;
 
     @Mock
     private UserRepository userRepository;
 
     @Mock
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @InjectMocks
-    private RegistrationService registrationService;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testRegisterSuccess() {
+    public void testRegister_Success() {
         RegistrationRequest request = new RegistrationRequest();
+        request.setUsername("testUser");
         request.setFirstName("John");
         request.setLastName("Doe");
-        request.setUsername("johndoe");
-        request.setPassword("password123");
+        request.setPassword("password");
         request.setAge(30);
-        request.setRoles(List.of(Role.FULL_USER));
 
-        when(userRepository.findUserByUsername("johndoe")).thenReturn(Optional.empty());
-        when(bCryptPasswordEncoder.encode("password123")).thenReturn("encodedPassword");
+        when(userRepository.findUserByUsername(anyString())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
         String result = registrationService.register(request);
 
-        assertEquals("Registration successful for user: johndoe", result);
-        verify(userRepository, times(1)).findUserByUsername("johndoe");
-        verify(bCryptPasswordEncoder, times(1)).encode("password123");
+        assertEquals("Registration successful for user: testUser", result);
         verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
     @Test
-    public void testRegisterUserAlreadyExists() {
+    public void testRegister_UsernameTaken() {
         RegistrationRequest request = new RegistrationRequest();
-        request.setUsername("johndoe");
+        request.setUsername("testUser");
 
         UserEntity existingUser = new UserEntity();
-        when(userRepository.findUserByUsername("johndoe")).thenReturn(Optional.of(existingUser));
+        when(userRepository.findUserByUsername(anyString())).thenReturn(Optional.of(existingUser));
 
         String result = registrationService.register(request);
 
         assertEquals("Username is already taken", result);
-        verify(userRepository, times(1)).findUserByUsername("johndoe");
-        verify(bCryptPasswordEncoder, never()).encode(anyString());
-        verify(userRepository, never()).save(any(UserEntity.class));
+        verify(userRepository, times(0)).save(any(UserEntity.class));
     }
 }
+

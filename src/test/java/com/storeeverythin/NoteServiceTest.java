@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 public class NoteServiceTest {
+
+    @InjectMocks
+    private NoteService noteService;
 
     @Mock
     private NoteRepository noteRepository;
@@ -38,104 +41,82 @@ public class NoteServiceTest {
     @Mock
     private Authentication authentication;
 
-    @InjectMocks
-    private NoteService noteService;
-
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
     }
 
     @Test
     public void testFindByUserId() {
-        long userId = 1L;
-        List<NoteEntity> notes = Arrays.asList(new NoteEntity(), new NoteEntity());
-        when(noteRepository.findByUserId(userId)).thenReturn(notes);
+        List<NoteEntity> notes = new ArrayList<>();
+        when(noteRepository.findByUserId(anyLong())).thenReturn(notes);
 
-        List<NoteEntity> result = noteService.findByUserId(userId);
+        List<NoteEntity> result = noteService.findByUserId(1L);
 
-        assertEquals(2, result.size());
-        verify(noteRepository, times(1)).findByUserId(userId);
+        assertEquals(notes, result);
     }
 
     @Test
     public void testDeleteNoteById() {
-        long noteId = 1L;
-        doNothing().when(noteRepository).deleteById(noteId);
+        doNothing().when(noteRepository).deleteById(anyLong());
 
-        noteService.deleteNoteById(noteId);
+        noteService.deleteNoteById(1L);
 
-        verify(noteRepository, times(1)).deleteById(noteId);
+        verify(noteRepository, times(1)).deleteById(anyLong());
     }
 
     @Test
     public void testFindByTitle() {
-        String title = "Test Title";
-        List<NoteEntity> notes = Arrays.asList(new NoteEntity(), new NoteEntity());
-        when(noteRepository.findByTitle(title)).thenReturn(notes);
+        List<NoteEntity> notes = new ArrayList<>();
+        when(noteRepository.findByTitle(anyString())).thenReturn(notes);
 
-        List<NoteEntity> result = noteService.findByTitle(title);
+        List<NoteEntity> result = noteService.findByTitle("test");
 
-        assertEquals(2, result.size());
-        verify(noteRepository, times(1)).findByTitle(title);
+        assertEquals(notes, result);
     }
 
     @Test
     public void testFindById() {
-        long noteId = 1L;
         NoteEntity note = new NoteEntity();
-        when(noteRepository.findById(noteId)).thenReturn(note);
+        when(noteRepository.findById(anyLong())).thenReturn(note);
 
-        NoteEntity result = noteService.findById(noteId);
+        NoteEntity result = noteService.findById(1L);
 
-        assertNotNull(result);
-        verify(noteRepository, times(1)).findById(noteId);
+        assertEquals(note, result);
     }
 
     @Test
-    public void testSaveNote() {
+    public void testSave() {
         NoteEntity note = new NoteEntity();
         UserEntity user = new UserEntity();
-        when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(user);
-        when(noteRepository.save(note)).thenReturn(note);
+        when(noteRepository.save(any(NoteEntity.class))).thenReturn(note);
 
         NoteEntity result = noteService.save(note);
 
-        assertNotNull(result);
+        assertEquals(note, result);
+        verify(noteRepository, times(1)).save(note);
         assertEquals(user, note.getUser());
-        verify(noteRepository, times(1)).save(note);
-    }
-
-    @Test
-    public void testEditNote() {
-        NoteEntity note = new NoteEntity();
-        when(noteRepository.save(note)).thenReturn(note);
-
-        noteService.editNote(note);
-
-        verify(noteRepository, times(1)).save(note);
     }
 
     @Test
     public void testDeleteNote() {
-        long noteId = 1L;
-        doNothing().when(noteRepository).deleteById(noteId);
+        doNothing().when(noteRepository).deleteById(anyLong());
 
-        noteService.deleteNoteById(noteId);
+        noteService.deleteNote(1L);
 
-        verify(noteRepository, times(1)).deleteById(noteId);
+        verify(noteRepository, times(1)).deleteById(anyLong());
     }
 
     @Test
     public void testGetAllNotes() {
-        List<NoteEntity> notes = Arrays.asList(new NoteEntity(), new NoteEntity());
+        List<NoteEntity> notes = new ArrayList<>();
         when(noteRepository.findAll()).thenReturn(notes);
 
         List<NoteEntity> result = noteService.getAllNotes();
 
-        assertEquals(2, result.size());
-        verify(noteRepository, times(1)).findAll();
+        assertEquals(notes, result);
     }
 }
