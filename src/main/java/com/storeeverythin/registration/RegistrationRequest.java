@@ -1,6 +1,10 @@
 package com.storeeverythin.registration;
 
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
+
+import com.storeeverythin.model.Role;
 
 public class RegistrationRequest {
 
@@ -18,6 +22,8 @@ public class RegistrationRequest {
 
     @NotEmpty(message = "Age is required")
     private Integer age;
+    
+    private List<Role> roles;
 
     // Gettery i settery
     public String getFirstName() {
@@ -58,5 +64,9 @@ public class RegistrationRequest {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public void setRoles(List<Role> list) {
+        this.roles = list;
     }
 }
